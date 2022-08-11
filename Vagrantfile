@@ -1,7 +1,7 @@
 #:-*- mode: ruby -*-
 # vi: set ft=ruby :
 
-#Branch=master
+#Branch=merege-ours
 
 Vagrant.require_version ">= 2.2.18"
 VDIR = File.dirname(__FILE__)
