@@ -4,9 +4,9 @@
 Vagrant.require_version ">= 2.2.18"
 VDIR = File.dirname(__FILE__)
 DOMAIN="yib.me"
-BOXNAME="fedora35"
-BOXVER="= 202111130946"
-CPUS=2
+BOXNAME="fedora36"
+BOXVER=">= 1.0.0"
+CPUS=4
 RAM=2048
 
 # Headless mode, default to yes
@@ -31,6 +31,9 @@ Vagrant.configure("2") do |config|
 
   nodesCfg(config=config,hostname="centos7",boxname="generic/centos7",
     boxversion="= 4.1.4",ip_addr="192.168.117.6",port_forward=nil,ram=2048,cpus=2,v_gui=V_GUI)
+
+  nodesCfg(config=config,hostname="podman",boxname="#{BOXNAME}",
+    boxversion="#{BOXVER}",ip_addr="192.168.117.7",port_forward=nil,ram=RAM,cpus=CPUS,v_gui=V_GUI)
 
 end
 
