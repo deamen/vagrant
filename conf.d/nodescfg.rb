@@ -61,13 +61,15 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
     ##
     # Provisioning
     ##
-    if boxname == 'fedora35'
+    if boxname == 'fedora36'
       vm_config.vm.provision "shell", path: "files/set_ip_addr.sh", args:["ens32", "#{ip_addr}"]
     end
     if hostname == 'podman'
       vm_config.vm.provision "shell", inline: "sudo dnf -y install podman"
     end
-    vm_config.vm.provision "shell", inline: "sudo yum -y install ansible"
+    if hostname == 'ansible'
+      vm_config.vm.provision "shell", inline: "sudo yum -y install ansible"
+    end
   end
 end
 
