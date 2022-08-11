@@ -1,6 +1,8 @@
 #:-*- mode: ruby -*-
 # vi: set ft=ruby :
 
+#Branch=master
+
 Vagrant.require_version ">= 2.2.18"
 VDIR = File.dirname(__FILE__)
 DOMAIN="yib.me"
