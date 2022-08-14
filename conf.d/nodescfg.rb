@@ -61,7 +61,7 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
     ##
     # Provisioning
     ##
-    if boxname == 'fedora36' || boxname == 'almalinux9'
+    if boxname =~ /fedora36/ || boxname =~ /almalinux9/
       vm_config.vm.provision "shell", path: "files/set_ip_addr.sh", args:["ens32", "#{ip_addr}"]
     end
     if hostname == 'podman'
