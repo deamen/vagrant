@@ -1,0 +1,137 @@
+#version=DEVEL
+# Use text install
+text
+# Run the Setup Agent on first boot
+firstboot --disable
+ignoredisk --only-use=sda
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_AU.UTF-8
+
+# Network information
+network  --bootproto=dhcp --device=ens33 --ipv6=auto --activate
+network  --hostname=localhost.localdomain
+
+# Use network installation
+url --mirrorlist="${netinstall_url}"
+# Root password
+rootpw --iscrypted ${rootpw}
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone Australia/Melbourne --utc
+timesource --ntp-server dc1.yib.me
+timesource --ntp-server dc3.yib.me
+
+# The --iscrypted option is not supported in CentOS7
+user --groups=wheel --name=vagrant --iscrypted --password="${vagrantpw}"
+# System bootloader configuration
+bootloader --append=" crashkernel=auto" --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --none --initlabel
+# Disk partitioning information
+
+part /boot --fstype="xfs" --ondisk=sda --size=4091
+part pv.1788 --fstype="lvmpv" --ondisk=sda --size=1 --grow
+volgroup vg00 --pesize=4096 pv.1788
+logvol /  --fstype="xfs" --size=1 --grow --label="root" --name=root --vgname=vg00
+logvol swap  --fstype="swap" --size=8192 --name=swap --vgname=vg00
+
+
+%packages
+@^server-product-environment
+@core
+chrony
+kexec-tools
+yum-utils
+
+%end
+
+%addon com_redhat_kdump --enable --reserve-mb='auto'
+
+%end
+
+%post
+#dnf update -y
+
+# Vagrant user configuration
+mkdir /home/vagrant/.ssh
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" >> /home/vagrant/.ssh/authorized_keys
+chown -R vagrant /home/vagrant/.ssh
+chmod -R go-rwsx /home/vagrant/.ssh
+echo "vagrant"|passwd --stdin vagrant
+echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
+chmod 0440 /etc/sudoers.d/vagrant
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+
+echo 'vagrant:${vagrantpw}' | sudo chpasswd -e
+
+# sshd: disable password authentication and DNS checks
+#:%substitute/^\(PasswordAuthentication\) yes$/\1 no/
+ex -s /etc/ssh/sshd_config <<EOF
+:%substitute/^#\(UseDNS\) yes$/&\r\1 no/
+:update
+:quit
+EOF
+cat >>/etc/sysconfig/sshd <<EOF
+
+# Decrease connection time by preventing reverse DNS lookups
+# (see https://lists.centos.org/pipermail/centos-devel/2016-July/014981.html
+#  and man sshd for more information)
+OPTIONS="-u0"
+EOF
+
+# Fix for issue #76, regular users can gain admin privileges via su
+ex -s /etc/pam.d/su <<'EOF'
+# allow vagrant to use su, but prevent others from becoming root or vagrant
+/^account\s\+sufficient\s\+pam_succeed_if.so uid = 0 use_uid quiet$/
+:append
+account         [success=1 default=ignore] \\
+                                pam_succeed_if.so user = vagrant use_uid quiet
+account         required        pam_succeed_if.so user notin root:vagrant
+.
+:update
+:quit
+EOF
+
+# systemd should generate a new machine id during the first boot, to
+# avoid having multiple Vagrant instances with the same id in the local
+# network. /etc/machine-id should be empty, but it must exist to prevent
+# boot errors (e.g.  systemd-journald failing to start).
+:>/etc/machine-id
+
+# Blacklist the floppy module to avoid probing timeouts
+echo blacklist floppy > /etc/modprobe.d/nofloppy.conf
+chcon -u system_u -r object_r -t modules_conf_t /etc/modprobe.d/nofloppy.conf
+
+# Customize the initramfs
+#pushd /etc/dracut.conf.d
+# Enable VMware PVSCSI support for VMware Fusion guests.
+#echo 'add_drivers+=" vmw_pvscsi "' > vmware-fusion-drivers.conf
+#echo 'add_drivers+=" hv_netvsc hv_storvsc hv_utils hv_vmbus hid-hyperv "' > hyperv-drivers.conf
+# There's no floppy controller, but probing for it generates timeouts
+#echo 'omit_drivers+=" floppy "' > nofloppy.conf
+#popd
+# Fix the SELinux context of the new files
+#restorecon -f - <<EOF
+#/etc/sudoers.d/vagrant
+#/etc/dracut.conf.d/vmware-fusion-drivers.conf
+#/etc/dracut.conf.d/hyperv-drivers.conf
+#/etc/dracut.conf.d/nofloppy.conf
+#EOF
+
+# Rerun dracut for the installed kernel (not the running kernel):
+# %%{ and $${ is for packer template
+KERNEL_VERSION=$(rpm -q kernel --qf '%%{version}-%%{release}.%%{arch}\n')
+#dracut -f /boot/initramfs-$${KERNEL_VERSION}.img $${KERNEL_VERSION}
+
+# Seal for deployment
+#rm -rf /etc/ssh/ssh_host_*
+#hostnamectl set-hostname localhost.localdomain
+#rm -rf /etc/udev/rules.d/70-*
+
+
+%end
+
+reboot
