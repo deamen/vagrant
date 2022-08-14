@@ -129,3 +129,17 @@ def test_uniqueness_of_ssh_host_keys(host):
         with open('almalinux-test-2.test.sshhostkeys', 'r') as file:
             ssh_host_keys_b = file.read()
         assert ssh_host_keys_a != ssh_host_keys_b
+
+def test_boot_mountpoint_is_big_enough(host):
+    """Check if the /boot mountpoint is bigger than 2GiB"""
+    with host.sudo():
+        mountpoint_size = host.block_device(host.mount_point("/boot").device).size
+
+    assert mountpoint_size >= 2144862208
+
+def test_root_mountpoint_is_big_enough(host):
+    """Check if the /boot mountpoint is bigger than 2TiB"""
+    with host.sudo():
+        mountpoint_size = host.block_device(host.mount_point("/").device).size
+
+    assert mountpoint_size >= 2000000000000
