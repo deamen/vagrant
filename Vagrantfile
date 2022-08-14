@@ -37,8 +37,8 @@ Vagrant.configure("2") do |config|
   nodesCfg(config=config,hostname="podman",boxname="#{BOXNAME}",
     boxversion="#{BOXVER}",ip_addr="192.168.117.3",port_forward=nil,ram=RAM,cpus=CPUS,v_gui=V_GUI)
 
-  nodesCfg(config=config,hostname="alma9",boxname="almalinux/9",
-    boxversion="= 9.0.20220802",ip_addr="192.168.117.8",port_forward=nil,ram=2048,cpus=2,v_gui=V_GUI)
+  nodesCfg(config=config,hostname="alma9",boxname="deamen/almalinux9",
+    boxversion="#{BOXVER}",ip_addr="192.168.117.8",port_forward=nil,ram=RAM,cpus=CPUS,v_gui=V_GUI)
 
 end
 
