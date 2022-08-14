@@ -1,0 +1,17 @@
+{
+  "name": "CentOS7",
+  "description": "CentOS v2004.01",
+  "versions": [
+    {
+      "version": "2004.01",
+        "providers": [{
+          "name": "vmware_desktop",
+          "url": "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7.VMwareFusion.box",
+          "checksum_type": "sha256",
+          "checksum": "7a23242c7b42be2b2ada25b09973601cc31aff6ef7deea5499ad7737ff3f3481"
+          }
+        ]
+    }
+  ]
+}
+
