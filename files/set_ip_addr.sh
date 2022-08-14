@@ -10,7 +10,7 @@ then
   # Do not delete conn if it does not exists
   if [ -n "$dev_conn" ]
   then
-    nmcli con del $dev_conn
+    nmcli con del "${dev_conn}"
   fi
   nmcli con add connection.id $1 \
                 connection.interface-name $1 \
