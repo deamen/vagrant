@@ -1,6 +1,6 @@
 # Requirements:
 1. VMware® Workstation 16 Pro >= 16.2.0 build-18760230
-2. Vagrant >= 2.2.18, version restriction applied in Vagrantfile
+2. Vagrant >= 2.2.19, version restriction applied in Vagrantfile
 3. [Vagrant VMware Utility](https://www.vagrantup.com/docs/providers/vmware/vagrant-vmware-utility) >= 1.0.21
 4. Vagrant plugins, version restrictions applied in cfg.d/nodes.cfg:
     - vagrant-vmware-desktop: VMware provider

@@ -79,10 +79,6 @@ build {
     "source.virtualbox-iso.fedora36"
   ]
 
-
-
-
-
   provisioner "shell" {
     inline = [
       "sudo dnf install -y open-vm-tools nfs-utils",

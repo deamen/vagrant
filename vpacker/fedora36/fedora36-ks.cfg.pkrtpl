@@ -71,8 +71,6 @@ cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
 PubkeyAcceptedKeyTypes=+ssh-rsa
 EOF
 
-echo 'vagrant:${vagrantpw}' | sudo chpasswd -e
-
 # sshd: disable password authentication and DNS checks
 #:%substitute/^\(PasswordAuthentication\) yes$/\1 no/
 ex -s /etc/ssh/sshd_config <<EOF
