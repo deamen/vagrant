@@ -1,3 +1,5 @@
 *
 !Vagrantfile
 !.gitignore
+!pytest.ini
+!test_vagrant.py

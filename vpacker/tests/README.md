@@ -12,17 +12,19 @@ This [Testinfra](https://testinfra.readthedocs.io/) test checks the facts below:
 - [x] Networking works properly.
 - [x] [machine-id](https://www.freedesktop.org/software/systemd/man/machine-id.html) is unique on each machine created from the boxes.
 - [x] SSH host keys are unique on each machine created from the boxes.
-
+- [x] The "/" size is over 2TiB
+- [x] The "/boot" size is over 2GiB
 
 ## How to run
 
 Linux:
 
 ```sh
-$ cd almalinux9
+$ pip install wheel paramilo pytest-testinfra
+$ cd fedora36
 $ vagrant up
 $ vagrant ssh-config > .vagrant/ssh-config
-$ py.test -v --hosts=almalinux-test-1,almalinux-test-2 --ssh-config=.vagrant/ssh-config ../test_vagrant.py 
+$ py.test -v --hosts=fedora36-test-1,fedora36-test-2 --ssh-config=.vagrant/ssh-config .
 ```
 Windows:
 

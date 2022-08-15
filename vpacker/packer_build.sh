@@ -7,10 +7,10 @@ export WINRMCP_DEBUG=1
 export VAULT_ADDR="https://vault1.yib.me"
 source ./creds.sh
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
   echo "Usage $0 <folder>"
 else
-  cp ./common_vars.pkr.hcl ${1}/variables.pkr.hcl
-  ./bin/packer build -force $1
+  cp ./common_vars.pkr.hcl ${2}/variables.pkr.hcl
+  ./bin/packer build -force -only=$1 $2
 fi

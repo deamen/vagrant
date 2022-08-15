@@ -65,6 +65,12 @@ echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
 chmod 0440 /etc/sudoers.d/vagrant
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
+cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
+# For now the vagrant insecure key is an rsa key
+# https://github.com/hashicorp/vagrant/issues/11783
+PubkeyAcceptedKeyTypes=+ssh-rsa
+EOF
+
 echo 'vagrant:${vagrantpw}' | sudo chpasswd -e
 
 # sshd: disable password authentication and DNS checks
