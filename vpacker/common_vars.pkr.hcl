@@ -16,7 +16,6 @@ variables {
   //
   // Vagrant specific variables
   //
-
   vagrant_shutdown_command = "echo vagrant | sudo -S /sbin/shutdown -hP now"
   builder_username     = "vagrant"
 

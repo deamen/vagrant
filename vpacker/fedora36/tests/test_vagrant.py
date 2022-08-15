@@ -103,9 +103,9 @@ def test_get_machineids(host):
 @pytest.mark.depends(on=['test_get_machineids'])
 def test_uniqueness_of_machineids():
     """Check if machine-id is unique for each machine"""
-    with open('fedora36-test-1.test.machineid', 'r') as file:
+    with open('test-1.test.machineid', 'r') as file:
         machine_id_a = file.read()
-    with open('fedora36-test-2.test.machineid', 'r') as file:
+    with open('test-2.test.machineid', 'r') as file:
         machine_id_b = file.read()
     assert machine_id_a != machine_id_b
 
@@ -123,10 +123,10 @@ def test_get_ssh_host_keys(host):
 def test_uniqueness_of_ssh_host_keys(host):
     """Check if SSH host keys are unique for each machine"""
     hostname = host.check_output("hostname")
-    if hostname == "fedora36-test-2.test":
-        with open('fedora36-test-1.test.sshhostkeys', 'r') as file:
+    if hostname == "test-2.test":
+        with open('test-1.test.sshhostkeys', 'r') as file:
             ssh_host_keys_a = file.read()
-        with open('fedora36-test-2.test.sshhostkeys', 'r') as file:
+        with open('test-2.test.sshhostkeys', 'r') as file:
             ssh_host_keys_b = file.read()
         assert ssh_host_keys_a != ssh_host_keys_b
 
