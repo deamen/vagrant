@@ -49,6 +49,7 @@ source "virtualbox-iso" "almalinux9" {
 
   guest_additions_mode = "upload"
   guest_additions_url  = "${var.virtualbox_guest_additions_url}"
+  guest_additions_sha256 = "${var.virtualbox_guest_additions_sha256}"
 
   guest_os_type    = "RedHat_64"
   # Avoid conflicts when running multiple builds
