@@ -127,6 +127,6 @@ build {
 
   post-processor "vagrant" {
     compression_level = "9"
-    output            = "build/${local.distro}_{{.Provider}}_${local.buildtime}.box"
+    output            = "build/${local.distro}/${local.distro}_{{.Provider}}_${local.buildtime}.box"
   }
 }
