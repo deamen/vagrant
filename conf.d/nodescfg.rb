@@ -35,14 +35,11 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
     # Vmware's HGFS works fine, no reason to use NFS
     config.nfs.functional = false
 
-    ###
-    # https://www.vagrantup.com/docs/providers/vmware/boxes
-    ###
-    vm_config.vm.provider "vmware_desktop" do |vmware|
-      vmware.allowlist_verified = true
-    end
-
     vm_config.vm.provider "vmware_desktop" do |v|
+      ###
+      # https://www.vagrantup.com/docs/providers/vmware/boxes
+      ###
+      v.allowlist_verified = true
       v.vmx["memsize"] = ram
       v.vmx["numvcpus"] = cpus
       # Force use HGFS
