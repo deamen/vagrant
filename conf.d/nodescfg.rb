@@ -19,7 +19,7 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
     vm_config.vm.synced_folder "#{VDIR}", "/vagrant"
 
     # Ansible folder
-    if hostname == 'ansible' || hostname == 'ansible8'
+    if hostname == 'ansible'
       vm_config.vm.synced_folder "#{VDIR}/../ansible", "/ansible"
       if OS.windows?
         puts "Do nothing".green
@@ -65,7 +65,7 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
       vm_config.vm.provision "shell", inline: "sudo dnf -y install podman"
     end
     if hostname == 'ansible'
-      vm_config.vm.provision "shell", inline: "sudo yum -y install ansible"
+      vm_config.vm.provision "shell", inline: "sudo dnf -y install ansible"
     end
   end
 end
