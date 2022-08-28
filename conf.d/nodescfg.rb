@@ -16,9 +16,11 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
     ##
     # Synced folders
     ##
+
+    # Vagrant repository folder
     vm_config.vm.synced_folder "#{VDIR}", "/vagrant"
 
-    # Ansible folder
+    # Ansible repository folder
     if hostname == 'ansible'
       vm_config.vm.synced_folder "#{VDIR}/../ansible", "/ansible"
       if OS.windows?
@@ -27,6 +29,14 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
         puts "Do nothing".green
       end
     end
+
+    # Container repository folders
+    if hostname == 'podman'
+      vm_config.vm.synced_folder "#{VDIR}/../ubi", "/ubi"
+      vm_config.vm.synced_folder "#{VDIR}/../cifs", "/cifs"
+    end
+
+
     ##
     # Providers specific configuration
     ##
@@ -40,8 +50,10 @@ def nodesCfg(config,hostname,boxname,boxversion,ip_addr,port_forward,ram,cpus,v_
       # https://www.vagrantup.com/docs/providers/vmware/boxes
       ###
       v.allowlist_verified = true
+
       v.vmx["memsize"] = ram
       v.vmx["numvcpus"] = cpus
+
       # Force use HGFS
       v.functional_hgfs = true
       v.gui = v_gui
