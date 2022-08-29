@@ -16,3 +16,4 @@ module OS
 end
 
 load "#{VDIR}/conf.d/nodescfg.rb"
+load "#{VDIR}/conf.d/port_forward.rb"

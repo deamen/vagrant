@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
   config.vagrant.plugins = ["vagrant-vmware-desktop"]
 
   nodesCfg(config=config,hostname="podman",boxname="#{BOXNAME}",
-    boxversion="#{BOXVER}",ip_addr="192.168.117.2",port_forward=nil,ram=RAM,cpus=CPUS,v_gui=V_GUI)
+           boxversion="#{BOXVER}",ip_addr="192.168.117.2",port_forward=podmanPort,ram=RAM,cpus=CPUS,v_gui=V_GUI)
 
   nodesCfg(config=config,hostname="fedora36",boxname="#{BOXNAME}",
     boxversion="#{BOXVER}",ip_addr="192.168.117.3",port_forward=nil,ram=RAM,cpus=CPUS,v_gui=V_GUI)
